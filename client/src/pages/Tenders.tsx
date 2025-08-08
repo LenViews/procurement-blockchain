@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Box, Typography, Button } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import  TenderCard  from '../components/TenderCard';
+import TenderCard from '../components/TenderCard';
 import type { Tender } from '../types';
 import api from '../services/api';
 import useAuth from '../hooks/useAuth';
@@ -18,10 +17,12 @@ const Tenders = () => {
   useEffect(() => {
     const fetchTenders = async () => {
       try {
+        setLoading(true);
+        setError(null);
         const response = await api.get<Tender[]>('/tenders');
         setTenders(response.data);
       } catch (err) {
-        setError('Failed to fetch tenders');
+        setError(err instanceof Error ? err.message : 'Failed to fetch tenders');
       } finally {
         setLoading(false);
       }
@@ -37,7 +38,11 @@ const Tenders = () => {
 
   const handleBidSubmitSuccess = () => {
     setShowBidForm(false);
-    // Optionally refresh bids list
+    const fetchUpdatedTenders = async () => {
+      const response = await api.get<Tender[]>('/tenders');
+      setTenders(response.data);
+    };
+    fetchUpdatedTenders();
   };
 
   if (loading) {
@@ -52,6 +57,21 @@ const Tenders = () => {
     return (
       <Box p={3}>
         <Typography color="error">{error}</Typography>
+        <Button 
+          variant="outlined" 
+          onClick={() => window.location.reload()}
+          sx={{ mt: 2 }}
+        >
+          Retry
+        </Button>
+      </Box>
+    );
+  }
+
+  if (!tenders.length) {
+    return (
+      <Box p={3}>
+        <Typography>No tenders available at the moment.</Typography>
       </Box>
     );
   }
@@ -62,7 +82,7 @@ const Tenders = () => {
         Available Tenders
       </Typography>
 
-      {showBidForm && selectedTender ? (
+      {showBidForm && selectedTender && (
         <Box mb={4}>
           <BidForm 
             tenderId={selectedTender.id} 
@@ -70,11 +90,23 @@ const Tenders = () => {
             onCancel={() => setShowBidForm(false)}
           />
         </Box>
-      ) : null}
+      )}
 
-      <Grid container spacing={3}>
+      <Box sx={{
+        display: 'grid',
+        gridTemplateColumns: {
+          xs: '1fr',
+          sm: 'repeat(2, 1fr)',
+          md: 'repeat(3, 1fr)'
+        },
+        gap: 3,
+        width: '100%'
+      }}>
         {tenders.map((tender) => (
-          <Grid item xs={12} sm={6} md={4} key={tender.id}>
+          <Box key={tender.id} sx={{
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
             <TenderCard 
               tender={tender} 
               action={
@@ -84,15 +116,16 @@ const Tenders = () => {
                     onClick={() => handleBidClick(tender)}
                     fullWidth
                     sx={{ mt: 2 }}
+                    disabled={!user}
                   >
-                    Place Bid
+                    {user ? 'Place Bid' : 'Login to Bid'}
                   </Button>
                 )
               }
             />
-          </Grid>
+          </Box>
         ))}
-      </Grid>
+      </Box>
     </Box>
   );
 };

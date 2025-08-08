@@ -1,15 +1,10 @@
 import axios from 'axios';
 import { useState } from 'react';
-import Grid from '@mui/material/Grid';
 import {
   Box,
   Button,
   TextField,
   Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Paper,
   CircularProgress,
 } from '@mui/material';
@@ -60,14 +55,17 @@ const BidForm = ({ tenderId, onSuccess, onCancel }: BidFormProps) => {
         if (onSuccess) {
           onSuccess();
         }
-    } catch (err: unknown) {
+      } catch (err: unknown) {
         if (axios.isAxiosError(err)) {
-            setError(err.response?.data?.message || 'Failed to submit bid. Please try again.');
+          setError(err.response?.data?.message || 'Failed to submit bid. Please try again.');
         } else if (err instanceof Error) {
-            setError(err.message);
+          setError(err.message);
         } else {
-            setError('An unexpected error occurred.');
-        }}
+          setError('An unexpected error occurred.');
+        }
+      } finally {
+        setIsSubmitting(false);
+      }
     },
   });
 
@@ -84,39 +82,37 @@ const BidForm = ({ tenderId, onSuccess, onCancel }: BidFormProps) => {
         Submit Bid
       </Typography>
       <form onSubmit={formik.handleSubmit}>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              id="amount"
-              name="amount"
-              label="Amount (KES)"
-              type="number"
-              value={formik.values.amount}
-              onChange={formik.handleChange}
-              error={formik.touched.amount && Boolean(formik.errors.amount)}
-              helperText={formik.touched.amount && formik.errors.amount}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              id="description"
-              name="description"
-              label="Description"
-              multiline
-              rows={4}
-              value={formik.values.description}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.description && Boolean(formik.errors.description)
-              }
-              helperText={
-                formik.touched.description && formik.errors.description
-              }
-            />
-          </Grid>
-          <Grid item xs={12}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: '1fr', // single column layout; change if you want multiple columns
+            gap: 3, // spacing between items
+          }}
+        >
+          <TextField
+            fullWidth
+            id="amount"
+            name="amount"
+            label="Amount (KES)"
+            type="number"
+            value={formik.values.amount}
+            onChange={formik.handleChange}
+            error={formik.touched.amount && Boolean(formik.errors.amount)}
+            helperText={formik.touched.amount && formik.errors.amount}
+          />
+          <TextField
+            fullWidth
+            id="description"
+            name="description"
+            label="Description"
+            multiline
+            rows={4}
+            value={formik.values.description}
+            onChange={formik.handleChange}
+            error={formik.touched.description && Boolean(formik.errors.description)}
+            helperText={formik.touched.description && formik.errors.description}
+          />
+          <Box>
             <input
               accept=".pdf,.doc,.docx,.xls,.xlsx"
               style={{ display: 'none' }}
@@ -140,35 +136,33 @@ const BidForm = ({ tenderId, onSuccess, onCancel }: BidFormProps) => {
                 {formik.values.documents.length} file(s) selected
               </Typography>
             )}
-          </Grid>
+          </Box>
+
           {error && (
-            <Grid item xs={12}>
-              <Typography color="error">{error}</Typography>
-            </Grid>
+            <Typography color="error">{error}</Typography>
           )}
-          <Grid item xs={12}>
-            <Box display="flex" justifyContent="space-between">
-              {onCancel && (
-                <Button
-                  variant="outlined"
-                  onClick={onCancel}
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </Button>
-              )}
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            {onCancel && (
               <Button
-                color="primary"
-                variant="contained"
-                type="submit"
+                variant="outlined"
+                onClick={onCancel}
                 disabled={isSubmitting}
-                endIcon={isSubmitting ? <CircularProgress size={20} /> : null}
               >
-                {isSubmitting ? 'Submitting...' : 'Submit Bid'}
+                Cancel
               </Button>
-            </Box>
-          </Grid>
-        </Grid>
+            )}
+            <Button
+              color="primary"
+              variant="contained"
+              type="submit"
+              disabled={isSubmitting}
+              endIcon={isSubmitting ? <CircularProgress size={20} /> : null}
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Bid'}
+            </Button>
+          </Box>
+        </Box>
       </form>
     </Paper>
   );

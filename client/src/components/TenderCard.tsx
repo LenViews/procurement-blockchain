@@ -14,9 +14,10 @@ import { useNavigate } from 'react-router-dom';
 interface TenderCardProps {
   tender: Tender;
   showBidButton?: boolean;
+  action?: React.ReactNode;  // Added optional action prop
 }
 
-const TenderCard = ({ tender, showBidButton = true }: TenderCardProps) => {
+const TenderCard = ({ tender, showBidButton = true, action }: TenderCardProps) => {
   const navigate = useNavigate();
 
   const getStatusColor = () => {
@@ -75,14 +76,18 @@ const TenderCard = ({ tender, showBidButton = true }: TenderCardProps) => {
           <Typography variant="caption" color="text.secondary">
             Posted: {format(new Date(tender.createdAt), 'PP')}
           </Typography>
-          {showBidButton && tender.status === 'Open' && (
-            <Button
-              size="small"
-              variant="contained"
-              onClick={() => navigate(`/tenders/${tender.id}`)}
-            >
-              View & Bid
-            </Button>
+          {action ? (
+            action
+          ) : (
+            showBidButton && tender.status === 'Open' && (
+              <Button
+                size="small"
+                variant="contained"
+                onClick={() => navigate(`/tenders/${tender.id}`)}
+              >
+                View & Bid
+              </Button>
+            )
           )}
         </Box>
       </CardContent>

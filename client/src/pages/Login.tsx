@@ -9,10 +9,8 @@ import {
   TextField,
   Typography,
   Paper,
-  //Grid,
   Link as MuiLink,
 } from '@mui/material';
-import Grid from "@mui/material/Grid";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -51,13 +49,7 @@ const Login = () => {
         backgroundColor: (theme) => theme.palette.background.default,
       }}
     >
-      <Paper
-        sx={{
-          p: 4,
-          width: '100%',
-          maxWidth: 500,
-        }}
-      >
+      <Paper sx={{ p: 4, width: '100%', maxWidth: 500 }}>
         <Typography variant="h4" align="center" gutterBottom>
           Procurement Portal
         </Typography>
@@ -71,54 +63,51 @@ const Login = () => {
           </Typography>
         )}
 
-        <form onSubmit={formik.handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                id="email"
-                name="email"
-                label="Email Address"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                id="password"
-                name="password"
-                label="Password"
-                type="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                error={formik.touched.password && Boolean(formik.errors.password)}
-                helperText={formik.touched.password && formik.errors.password}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                color="primary"
-                variant="contained"
-                fullWidth
-                type="submit"
-                size="large"
-              >
-                Sign In
-              </Button>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="body2" align="center">
-                Don't have an account?{' '}
-                <MuiLink component={Link} to="/register">
-                  Register here
-                </MuiLink>
-              </Typography>
-            </Grid>
-          </Grid>
-        </form>
+        <Box 
+          component="form" 
+          onSubmit={formik.handleSubmit}
+          sx={{ display: 'grid', gap: 2 }}
+        >
+          <TextField
+            fullWidth
+            id="email"
+            name="email"
+            label="Email Address"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
+          />
+
+          <TextField
+            fullWidth
+            id="password"
+            name="password"
+            label="Password"
+            type="password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            helperText={formik.touched.password && formik.errors.password}
+          />
+
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            type="submit"
+            size="large"
+          >
+            Sign In
+          </Button>
+
+          <Typography variant="body2" align="center">
+            Don't have an account?{' '}
+            <MuiLink component={Link} to="/register">
+              Register here
+            </MuiLink>
+          </Typography>
+        </Box>
       </Paper>
     </Box>
   );
