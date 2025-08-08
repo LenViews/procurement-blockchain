@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { Box, Typography, Table, TableHead, TableBody, TableRow, TableCell, Paper } from '@mui/material';
 import type { Bid } from '../types';
 import api from '../services/api';
-import useAuth from '../hooks/useAuth';
+//import useAuth from '../hooks/useAuth';
 
 const Bids = () => {
-  const { user } = useAuth();
+//  const { user } = useAuth();
   const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

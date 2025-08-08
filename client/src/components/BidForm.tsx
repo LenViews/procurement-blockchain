@@ -1,4 +1,6 @@
+import axios from 'axios';
 import { useState } from 'react';
+import Grid from '@mui/material/Grid';
 import {
   Box,
   Button,
@@ -9,7 +11,6 @@ import {
   Select,
   MenuItem,
   Paper,
-  Grid,
   CircularProgress,
 } from '@mui/material';
 import { useFormik } from 'formik';
@@ -59,13 +60,14 @@ const BidForm = ({ tenderId, onSuccess, onCancel }: BidFormProps) => {
         if (onSuccess) {
           onSuccess();
         }
-      } catch (err) {
-        setError(
-          err.response?.data?.message || 'Failed to submit bid. Please try again.'
-        );
-      } finally {
-        setIsSubmitting(false);
-      }
+    } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+            setError(err.response?.data?.message || 'Failed to submit bid. Please try again.');
+        } else if (err instanceof Error) {
+            setError(err.message);
+        } else {
+            setError('An unexpected error occurred.');
+        }}
     },
   });
 

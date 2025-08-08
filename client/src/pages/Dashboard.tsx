@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Box, Typography, Grid, Card, CardContent, CircularProgress } from '@mui/material';
-import { TenderCard } from '../components/TenderForm';
+import { Box, Typography, Card, CardContent, CircularProgress } from '@mui/material';
+import TenderCard from '../components/TenderForm';
+import Grid from '@mui/material/Grid';
 import type { Bid, Tender } from '../types';
 import api from '../services/api';
-import { useAuth } from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 
 const Dashboard = () => {
   const { user } = useAuth();
