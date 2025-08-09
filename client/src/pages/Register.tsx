@@ -8,13 +8,18 @@ import {
   Button,
   TextField,
   Typography,
-  Paper,
   Link as MuiLink,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
+  Paper,
+  InputAdornment,
+  Divider,
+  Fade
 } from '@mui/material';
+import { Email, Lock, Business, Receipt, Phone } from '@mui/icons-material';
+import { motion } from 'framer-motion';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -75,141 +80,317 @@ const Register = () => {
         alignItems: 'center',
         minHeight: '100vh',
         p: 2,
-        backgroundColor: (theme) => theme.palette.background.default,
+        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/kenya.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        color: '#fff',
       }}
     >
-      <Paper sx={{ p: 4, width: '100%', maxWidth: 600 }}>
-        <Typography variant="h4" align="center" gutterBottom>
-          Vendor Registration
-        </Typography>
-        <Typography variant="body1" align="center" color="textSecondary" gutterBottom>
-          Create your procurement account
-        </Typography>
-
-        {error && (
-          <Typography color="error" align="center" sx={{ mb: 2 }}>
-            {error}
-          </Typography>
-        )}
-
-        <Box 
-          component="form" 
-          onSubmit={formik.handleSubmit}
+      <Fade in timeout={500}>
+        <Paper
+          component={motion.div}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
-            gap: 2
+            width: '100%',
+            maxWidth: 700,
+            p: 4,
+            borderRadius: 2,
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
           }}
         >
-          <Box sx={{ gridColumn: { xs: '1', sm: 'span 2' } }}>
+          <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <Typography 
+              variant="h4"
+              gutterBottom
+              sx={{ 
+                fontWeight: 700,
+                color: '#2E7D32',
+                mb: 1
+              }}
+            >
+              VENDOR REGISTRATION
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Join our trusted procurement network
+            </Typography>
+          </Box>
+
+          {error && (
+            <Box
+              sx={{
+                mb: 3,
+                p: 2,
+                backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                borderRadius: 1,
+                border: '1px solid rgba(211, 47, 47, 0.3)',
+                textAlign: 'center'
+              }}
+            >
+              <Typography color="error.main" sx={{ fontWeight: 500 }}>
+                {error}
+              </Typography>
+            </Box>
+          )}
+
+          <Box 
+            component="form" 
+            onSubmit={formik.handleSubmit}
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
+              gap: 3
+            }}
+          >
+            <Box sx={{ gridColumn: { xs: '1', sm: 'span 2' } }}>
+              <TextField
+                fullWidth
+                id="companyName"
+                name="companyName"
+                label="Company Name"
+                value={formik.values.companyName}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.companyName && Boolean(formik.errors.companyName)}
+                helperText={formik.touched.companyName && formik.errors.companyName}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Business color="action" />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#2E7D32',
+                    },
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: '#2E7D32',
+                  },
+                }}
+              />
+            </Box>
+
             <TextField
               fullWidth
-              id="companyName"
-              name="companyName"
-              label="Company Name"
-              value={formik.values.companyName}
+              id="kraPin"
+              name="kraPin"
+              label="KRA PIN"
+              placeholder="A123456789Z"
+              value={formik.values.kraPin}
               onChange={formik.handleChange}
-              error={formik.touched.companyName && Boolean(formik.errors.companyName)}
-              helperText={formik.touched.companyName && formik.errors.companyName}
+              onBlur={formik.handleBlur}
+              error={formik.touched.kraPin && Boolean(formik.errors.kraPin)}
+              helperText={formik.touched.kraPin && formik.errors.kraPin}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Receipt color="action" />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#2E7D32',
+                  },
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: '#2E7D32',
+                },
+              }}
             />
-          </Box>
 
-          <TextField
-            fullWidth
-            id="kraPin"
-            name="kraPin"
-            label="KRA PIN"
-            placeholder="A123456789Z"
-            value={formik.values.kraPin}
-            onChange={formik.handleChange}
-            error={formik.touched.kraPin && Boolean(formik.errors.kraPin)}
-            helperText={formik.touched.kraPin && formik.errors.kraPin}
-          />
-
-          <TextField
-            fullWidth
-            id="email"
-            name="email"
-            label="Email Address"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
-          />
-
-          <TextField
-            fullWidth
-            id="password"
-            name="password"
-            label="Password"
-            type="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
-          />
-
-          <TextField
-            fullWidth
-            id="confirmPassword"
-            name="confirmPassword"
-            label="Confirm Password"
-            type="password"
-            value={formik.values.confirmPassword}
-            onChange={formik.handleChange}
-            error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
-            helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
-          />
-
-          <TextField
-            fullWidth
-            id="phoneNumber"
-            name="phoneNumber"
-            label="Phone Number"
-            placeholder="+254712345678"
-            value={formik.values.phoneNumber}
-            onChange={formik.handleChange}
-            error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
-            helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
-          />
-
-          <FormControl fullWidth>
-            <InputLabel id="category-label">Category</InputLabel>
-            <Select
-              labelId="category-label"
-              id="category"
-              name="category"
-              value={formik.values.category}
-              onChange={formik.handleChange}
-              label="Category"
-              error={formik.touched.category && Boolean(formik.errors.category)}
-            >
-              <MenuItem value="goods">Goods</MenuItem>
-              <MenuItem value="services">Services</MenuItem>
-            </Select>
-          </FormControl>
-
-          <Box sx={{ gridColumn: '1 / -1' }}>
-            <Button
-              type="submit"
+            <TextField
               fullWidth
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting}
-              sx={{ py: 1.5 }}
-            >
-              {isSubmitting ? 'Registering...' : 'Register'}
-            </Button>
-          </Box>
+              id="email"
+              name="email"
+              label="Email Address"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Email color="action" />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#2E7D32',
+                  },
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: '#2E7D32',
+                },
+              }}
+            />
 
-          <Typography variant="body2" align="center" sx={{ gridColumn: '1 / -1' }}>
-            Already have an account?{' '}
-            <MuiLink component={Link} to="/login" underline="hover">
-              Sign in
-            </MuiLink>
-          </Typography>
-        </Box>
-      </Paper>
+            <TextField
+              fullWidth
+              id="phoneNumber"
+              name="phoneNumber"
+              label="Phone Number"
+              placeholder="+254712345678"
+              value={formik.values.phoneNumber}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
+              helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Phone color="action" />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#2E7D32',
+                  },
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: '#2E7D32',
+                },
+              }}
+            />
+
+            <TextField
+              fullWidth
+              id="password"
+              name="password"
+              label="Password"
+              type="password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock color="action" />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#2E7D32',
+                  },
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: '#2E7D32',
+                },
+              }}
+            />
+
+            <TextField
+              fullWidth
+              id="confirmPassword"
+              name="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              value={formik.values.confirmPassword}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+              helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock color="action" />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#2E7D32',
+                  },
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: '#2E7D32',
+                },
+              }}
+            />
+
+            <FormControl 
+              fullWidth
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#2E7D32',
+                  },
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: '#2E7D32',
+                },
+              }}
+            >
+              <InputLabel id="category-label">Category</InputLabel>
+              <Select
+                labelId="category-label"
+                id="category"
+                name="category"
+                value={formik.values.category}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                label="Category"
+                error={formik.touched.category && Boolean(formik.errors.category)}
+              >
+                <MenuItem value="goods">Goods</MenuItem>
+                <MenuItem value="services">Services</MenuItem>
+              </Select>
+            </FormControl>
+
+            <Box sx={{ gridColumn: '1 / -1', mt: 2 }}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                disabled={isSubmitting}
+                sx={{
+                  py: 1.75,
+                  backgroundColor: '#2E7D32',
+                  '&:hover': {
+                    backgroundColor: '#1B5E20',
+                  },
+                }}
+              >
+                {isSubmitting ? 'Registering...' : 'Register Account'}
+              </Button>
+            </Box>
+
+            <Divider sx={{ gridColumn: '1 / -1', my: 2 }} />
+
+            <Typography variant="body2" align="center" sx={{ gridColumn: '1 / -1', color: 'text.secondary' }}>
+              Already have an account?{' '}
+              <MuiLink 
+                component={Link} 
+                to="/login"
+                sx={{ 
+                  color: '#2E7D32',
+                  fontWeight: 500,
+                  '&:hover': {
+                    textDecoration: 'none',
+                  }
+                }}
+              >
+                Sign in
+              </MuiLink>
+            </Typography>
+          </Box>
+        </Paper>
+      </Fade>
     </Box>
   );
 };
