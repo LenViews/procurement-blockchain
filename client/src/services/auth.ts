@@ -1,9 +1,18 @@
 import api from './api';
 import type { User, AuthResponse } from '../types';
 
+interface LoginResponse {
+  token: string;
+  vendor: User; // Matches server response
+}
+
 export const login = async (email: string, password: string): Promise<AuthResponse> => {
-  const response = await api.post<AuthResponse>('/auth/login', { email, password });
-  return response.data;
+  const response = await api.post<LoginResponse>('/auth/login', { email, password });
+  
+  return {
+    token: response.data.token,
+    user: response.data.vendor // Map 'vendor' to 'user' for client
+  };
 };
 
 export const register = async (userData: {
