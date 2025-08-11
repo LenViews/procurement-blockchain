@@ -50,20 +50,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    console.log('Login started'); // Debug
     setLoading(true);
     setError(null);
     try {
       const { user, token } = await apiLogin(email, password);
-      console.log('Login API success:', { user, token }); // Debug
       setUser(user);
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
-      console.log('Before navigation'); // Debug
       navigate('/dashboard');
-      console.log('After navigation'); // Debug (should not log if redirect works)
     } catch (err) {
-      console.error('Login error:', err); // Debug
       setError(err instanceof Error ? err.message : 'Login failed');
       throw err;
     } finally {

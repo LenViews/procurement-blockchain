@@ -3,7 +3,7 @@ import type { User, AuthResponse } from '../types';
 
 interface LoginResponse {
   token: string;
-  vendor: User; // Matches server response
+  vendor: User;
 }
 
 export const login = async (email: string, password: string): Promise<AuthResponse> => {
@@ -11,7 +11,7 @@ export const login = async (email: string, password: string): Promise<AuthRespon
   
   return {
     token: response.data.token,
-    user: response.data.vendor // Map 'vendor' to 'user' for client
+    user: response.data.vendor
   };
 };
 
