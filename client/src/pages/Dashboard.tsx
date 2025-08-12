@@ -18,7 +18,7 @@ const Dashboard = () => {
         setLoading(true);
         const [tendersRes, bidsRes] = await Promise.all([
           api.get<Tender[]>('/tenders'),
-          api.get<Bid[]>('/bids/my'),
+          api.get<Bid[]>('/bids'),
         ]);
         setTenders(tendersRes.data);
         setBids(bidsRes.data);

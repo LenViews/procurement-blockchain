@@ -13,7 +13,7 @@ const Bids = () => {
   useEffect(() => {
     const fetchBids = async () => {
       try {
-        const response = await api.get<Bid[]>('/bids/my');
+        const response = await api.get<Bid[]>('/bids');
         setBids(response.data);
       } catch (err) {
         setError('Failed to fetch bids');
