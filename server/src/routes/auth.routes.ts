@@ -2,7 +2,8 @@ import { Router } from 'express';
 import {
   registerVendor,
   loginVendor,
-  getVendor
+  getVendor,
+  logoutVendor
 } from '../controllers/auth.controller';
 import { auth } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
@@ -23,6 +24,7 @@ router.post('/login', validate(loginVendorSchema), loginVendor);
 // @route   GET api/auth/me
 // @desc    Get current vendor
 // @access  Private
+router.post('/logout', logoutVendor);
 router.get('/me', auth, getVendor);
 
 export default router;

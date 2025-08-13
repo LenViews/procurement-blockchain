@@ -186,3 +186,21 @@ export const getVendor = async (req: AuthRequest, res: Response) => {
     });
   }
 };
+
+export const logoutVendor = async (req: AuthRequest, res: Response) => {
+  try {
+    // Invalidate the token on the client side
+    // This is a stateless logout, so no server-side action is needed
+    res.json({
+      success: true,
+      message: 'Logged out successfully'
+    });
+  } catch (err: unknown) {
+    console.error('Logout error:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Server error during logout',
+      error: err instanceof Error ? err.message : 'Unknown error'
+    });
+  }
+};
