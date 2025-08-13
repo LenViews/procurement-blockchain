@@ -1,56 +1,78 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, TextField, Button, Avatar, Paper } from '@mui/material';
+import { Box, Typography, TextField, Button, Avatar, Paper, CircularProgress } from '@mui/material';
 import useAuth from '../hooks/useAuth';
 import api from '../services/api';
 
+interface ProfileFormData {
+  companyName: string;
+  email: string;
+  phoneNumber: string;
+  kraPin: string;
+  category: string;
+}
+
 const Profile = () => {
   const { user, logout } = useAuth();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProfileFormData>({
     companyName: '',
     email: '',
     phoneNumber: '',
     kraPin: '',
     category: '',
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  // Initialize form data when user loads
   useEffect(() => {
     if (user) {
       setFormData({
-        companyName: user.companyName,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        kraPin: user.kraPin,
-        category: user.category,
+        companyName: user.companyName || '',
+        email: user.email || '',
+        phoneNumber: user.phoneNumber || '',
+        kraPin: user.kraPin || '',
+        category: user.category || '',
       });
+      setLoading(false);
     }
   }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    setError(null); // Clear error when user makes changes
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      setUpdating(true);
       setError(null);
+      setSuccess(null);
+      
       await api.put('/vendors/me', formData);
       setSuccess('Profile updated successfully');
     } catch (err) {
-      setError('Failed to update profile');
+      setError(err instanceof Error ? err.message : 'Failed to update profile');
     } finally {
-      setLoading(false);
+      setUpdating(false);
     }
   };
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (!user) {
     return (
       <Box p={3}>
-        <Typography>Loading profile...</Typography>
+        <Typography color="error">Failed to load user profile</Typography>
       </Box>
     );
   }
@@ -64,7 +86,7 @@ const Profile = () => {
       <Paper sx={{ p: 3, maxWidth: 600 }}>
         <Box display="flex" flexDirection="column" alignItems="center" mb={3}>
           <Avatar sx={{ width: 80, height: 80, mb: 2 }}>
-            {user.companyName.charAt(0).toUpperCase()}
+            {user.companyName?.charAt(0)?.toUpperCase() || 'U'}
           </Avatar>
           <Typography variant="h6">{user.companyName}</Typography>
           <Typography variant="body2" color="textSecondary">
@@ -93,6 +115,7 @@ const Profile = () => {
             onChange={handleChange}
             margin="normal"
             required
+            inputProps={{ maxLength: 100 }}
           />
           <TextField
             fullWidth
@@ -113,6 +136,7 @@ const Profile = () => {
             onChange={handleChange}
             margin="normal"
             required
+            inputProps={{ maxLength: 20 }}
           />
           <TextField
             fullWidth
@@ -122,15 +146,17 @@ const Profile = () => {
             onChange={handleChange}
             margin="normal"
             required
+            inputProps={{ maxLength: 11 }}
           />
           <Box mt={3} display="flex" justifyContent="space-between">
             <Button
               type="submit"
               variant="contained"
               color="primary"
-              disabled={loading}
+              disabled={updating}
+              startIcon={updating ? <CircularProgress size={20} /> : null}
             >
-              {loading ? 'Updating...' : 'Update Profile'}
+              {updating ? 'Updating...' : 'Update Profile'}
             </Button>
             <Button
               variant="outlined"
