@@ -38,7 +38,7 @@ const Profile = () => {
     try {
       setLoading(true);
       setError(null);
-      await api.put('/profile', formData);
+      await api.put('/vendors/me', formData);
       setSuccess('Profile updated successfully');
     } catch (err) {
       setError('Failed to update profile');
