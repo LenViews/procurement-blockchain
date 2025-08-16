@@ -20,6 +20,7 @@ const Tenders = () => {
         setLoading(true);
         setError(null);
         const response = await api.get<Tender[]>('/tenders');
+        console.log('Tenders data:', response.data); //for debugging
         setTenders(response.data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch tenders');
